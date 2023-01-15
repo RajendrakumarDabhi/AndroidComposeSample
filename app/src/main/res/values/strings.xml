@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ComposeBasicSample</string>
+    <string name="app_name">Compose Basic Sample</string>
     <string name="title_activity_componants">ComponantsActivity</string>
     <string name="title_activity_calculator_sample">CalculatorSample</string>
 </resources>

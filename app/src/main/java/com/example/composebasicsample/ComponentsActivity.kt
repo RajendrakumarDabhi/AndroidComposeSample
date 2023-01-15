@@ -2,11 +2,14 @@ package com.example.composebasicsample
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
@@ -22,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -68,7 +73,7 @@ fun Body() {
                 }
             })
         SelectionContainer() {
-            Row() {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = stringResource(id = R.string.app_name),
                     style = MaterialTheme.typography.body1,
@@ -77,26 +82,29 @@ fun Body() {
                 )
                 DisableSelection {
                     Text(
-                        text = "Disabled Selection",
+                        text = "Disabled Selection ",
                         style = MaterialTheme.typography.body1,
                         color = Color.Gray,
                         modifier = Modifier.padding(2.dp)
                     )
                 }
-                Text(
-                    text = "Selectable ",
-                    style = MaterialTheme.typography.body1,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(2.dp)
-                )
             }
         }
         Spacer(modifier = Modifier.height(2.dp))
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        TextField(
+        OutlinedTextField( //TextField can also be used here for simple decoration
             value = textState.value,
             leadingIcon = { Icon(imageVector = Icons.Filled.Email, contentDescription = null) },
             label = { Text("Enter email here") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    Log.e("On Done","On Done Clicked")
+                }
+            ),
             onValueChange = { textState.value = it },
             modifier = Modifier
                 .padding(2.dp)
@@ -127,6 +135,15 @@ fun Body() {
             CustomSurface(2f, color = Color.Blue)
             CustomSurface(3f, color = Color.Red)
         }
+        Spacer(modifier = Modifier.height(1.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
+        GoogleButton(
+            text = "Sign Up with Google",
+            loadingText = "Creating Account...",
+            onClicked = {}
+        )
+        }
+        Spacer(modifier = Modifier.height(1.dp))
         ExpendableCardView(
             title = "Click to expend",
             description = "Loreium iup locak test message  here taken by lokcan name here loc are joined"

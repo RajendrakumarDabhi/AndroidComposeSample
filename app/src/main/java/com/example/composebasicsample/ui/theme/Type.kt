@@ -10,8 +10,8 @@ import com.example.composebasicsample.R
 
 
 val ragasta = FontFamily(
-    Font(R.font.ragasta_italic),
-    Font(R.font.ragasta, FontWeight.Bold)
+    Font(R.font.ruso_one_regular),
+    Font(R.font.ruso_one_regular, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with
