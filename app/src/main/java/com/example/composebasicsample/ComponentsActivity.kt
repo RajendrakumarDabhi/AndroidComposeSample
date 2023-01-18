@@ -8,10 +8,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -52,7 +54,9 @@ class ComponentsActivity : ComponentActivity() {
 @Composable
 fun Body() {
     val mContext = LocalContext.current
-    Column() {
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+    ) {
         TopAppBar(
             elevation = 4.dp,
             title = {
@@ -148,6 +152,8 @@ fun Body() {
             title = "Click to expend",
             description = "Loreium iup locak test message  here taken by lokcan name here loc are joined"
         )
+        LiveImageView(height = 150.dp, width = 150.dp, imgUrl ="https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHVwcHl8ZW58MHx8MHx8&w=1000&q=80")
+
     }
 }
 

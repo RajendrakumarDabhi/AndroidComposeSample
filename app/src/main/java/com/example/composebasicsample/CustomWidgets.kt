@@ -6,6 +6,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -27,6 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
 import java.time.format.TextStyle
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -159,6 +163,29 @@ fun GoogleButton(
                 onClicked()
             }
         }
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+fun LiveImageView(height: Dp, width: Dp, imgUrl: String, desc: String = "") {
+    Box(
+        modifier = Modifier
+            .height(height = height)
+            .width(width = width),
+        contentAlignment = Alignment.Center
+    ) {
+        val painter = rememberImagePainter(data = imgUrl, builder = {
+            placeholder(R.drawable.img_placeholder)
+            error(R.drawable.img_data_error)
+            //setHeader() to be used to set header
+        })
+        /* //Can be useful to track state and react based on that
+         val painterState = painter.state
+         if (painterState is ImagePainter.State.Loading) {
+             CircularProgressIndicator()
+         }*/
+        Image(painter = painter, contentDescription = desc)
     }
 }
 
