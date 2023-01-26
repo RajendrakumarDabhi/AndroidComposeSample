@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,11 +21,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -54,9 +55,14 @@ class ComponentsActivity : ComponentActivity() {
 @Composable
 fun Body() {
     val mContext = LocalContext.current
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
+    var isListShow by remember { mutableStateOf(false) }
+    val textState = remember { mutableStateOf(TextFieldValue()) }
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
     ) {
+        //region topbar
         TopAppBar(
             elevation = 4.dp,
             title = {
@@ -76,6 +82,9 @@ fun Body() {
                     Icon(Icons.Filled.Settings, null)
                 }
             })
+        //endregion
+
+        //region Textview Sample
         SelectionContainer() {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
@@ -94,26 +103,36 @@ fun Body() {
                 }
             }
         }
+        //endregion
+
         Spacer(modifier = Modifier.height(2.dp))
-        val textState = remember { mutableStateOf(TextFieldValue()) }
-        OutlinedTextField( //TextField can also be used here for simple decoration
-            value = textState.value,
-            leadingIcon = { Icon(imageVector = Icons.Filled.Email, contentDescription = null) },
-            label = { Text("Enter email here") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    Log.e("On Done","On Done Clicked")
-                }
-            ),
-            onValueChange = { textState.value = it },
-            modifier = Modifier
-                .padding(2.dp)
-                .fillMaxWidth()
-        )
+
+        //region TextField Sample
+        Box(modifier = Modifier.clickable {
+            isListShow = true
+        }) {
+            OutlinedTextField( //TextField can also be used here for simple decoration
+                value = textState.value,
+                leadingIcon = { Icon(imageVector = Icons.Filled.Email, contentDescription = null) },
+                label = { Text("Enter Contact Person") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        Log.e("On Done", "On Done Clicked")
+                    }
+                ),
+                onValueChange = { isListShow = true },
+                modifier = Modifier
+                    .padding(2.dp)
+                    .fillMaxWidth()
+            )
+        }
+        //endregion
+
+        //region column sample
         Column(
             modifier = Modifier
                 .height(160.dp)
@@ -126,6 +145,9 @@ fun Body() {
             CustomSurface(2f, color = Color.Blue)
             CustomSurface(1f, color = Color.Red)
         }
+        //endregion
+
+        //region row sample
         Row(
             modifier = Modifier
                 .height(60.dp)
@@ -139,22 +161,61 @@ fun Body() {
             CustomSurface(2f, color = Color.Blue)
             CustomSurface(3f, color = Color.Red)
         }
+        //endregion
         Spacer(modifier = Modifier.height(1.dp))
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
-        GoogleButton(
-            text = "Sign Up with Google",
-            loadingText = "Creating Account...",
-            onClicked = {}
-        )
+        //region custom view sample
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            GoogleButton(
+                text = "Sign Up with Google",
+                loadingText = "Creating Account...",
+                onClicked = {}
+            )
         }
+        //endregion
+
         Spacer(modifier = Modifier.height(1.dp))
+        //region expedable cardview sample
         ExpendableCardView(
             title = "Click to expend",
             description = "Loreium iup locak test message  here taken by lokcan name here loc are joined"
         )
-        LiveImageView(height = 150.dp, width = 150.dp, imgUrl ="https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHVwcHl8ZW58MHx8MHx8&w=1000&q=80")
-
+        //endregion
+        //region imageview sample
+        LiveImageView(
+            height = 150.dp,
+            width = 150.dp,
+            imgUrl = "https://images.unsplash.com/photo-1600804340584-c7db2eacf0bf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHVwcHl8ZW58MHx8MHx8&w=1000&q=80"
+        )
+        //endregion
+        GradientButton(
+            "Button", Color.White, Brush.horizontalGradient(
+                colors = listOf(
+                    Color.Blue, Color.Gray
+                ),
+            )
+        ) {
+            showToast(mContext, "Button Clicked")
+        }
     }
+    //region Listviewsample
+    if (isListShow) {
+        val listData = getAllData()
+        LazyColumn(
+            modifier = Modifier.padding(start = 24.dp, top = 104.dp, bottom = 54.dp, end = 24.dp)
+        ) {
+            items(listData.size) {
+                UserItem(person = listData.get(it), MaterialTheme.typography) {
+                    isListShow = false
+                    textState.value = TextFieldValue(it)
+                }
+            }
+        }
+    }
+    //endregion
 }
 
 @Composable
